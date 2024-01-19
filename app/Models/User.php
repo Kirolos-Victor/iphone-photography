@@ -71,7 +71,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Lesson::class)->wherePivot('watched', true);
     }
 
-    public function unlockAchievement($achievementName, $user, $type): void
+    public function unlockAchievement(string $achievementName, User $user, string $type): void
     {
         Achievement::create([
                 'name'    => $achievementName,
@@ -79,7 +79,7 @@ class User extends Authenticatable
                 'type'    => $type,
         ]);
     }
-    public function unlockBadge($badgeName, $user): void
+    public function unlockBadge(string $badgeName, User $user): void
     {
         Badge::create([
                 'name'    => $badgeName,

@@ -10,6 +10,8 @@ class BadgeUnlockedListener
         $badgeName = $event->badgeName;
 
         // Update user's badge logic
-        $user->unlockBadge($badgeName, $user);
+        if ($user->getLatestUnlockedBadge()->name != $badgeName) {
+            $user->unlockBadge($badgeName, $user);
+        }
     }
 }
