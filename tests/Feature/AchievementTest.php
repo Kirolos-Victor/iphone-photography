@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Events\AchievementUnlocked;
 use App\Listeners\AchievementUnlockedListener;
+use App\Models\Achievement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -12,6 +13,17 @@ use Tests\TestCase;
 class AchievementTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function testCreateAchievement(): void
+    {
+        $achievement = Achievement::factory()->create();
+        $this->assertDatabaseHas('achievements', [
+                'id'      => $achievement->id,
+                'name'    => $achievement->name,
+                'user_id' => $achievement->user_id,
+                'type'    => $achievement->type,
+        ]);
+    }
 
     public function testAchievementUnlockedEventHasCorrectProperties()
     {
@@ -24,6 +36,7 @@ class AchievementTest extends TestCase
         $this->assertSame($user, $event->user);
         $this->assertSame('test', $event->type);
     }
+
     public function testUnlockAchievementCreatesAchievement()
     {
         $user = User::factory()->create();
@@ -38,6 +51,7 @@ class AchievementTest extends TestCase
                 'type'    => $type,
         ]);
     }
+
     public function testAchievementUnlockedListener()
     {
         Event::fake();
