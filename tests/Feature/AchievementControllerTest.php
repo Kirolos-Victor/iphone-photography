@@ -14,7 +14,7 @@ class AchievementControllerTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $response = $this->get("/users/{$user->id}/achievements");
+        $response = $this->get("/api/users/{$user->id}/achievements");
 
         $response->assertStatus(200);
     }

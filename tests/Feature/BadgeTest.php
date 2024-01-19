@@ -2,19 +2,22 @@
 
 namespace Tests\Feature;
 
+use App\Events\BadgeUnlocked;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BadgeTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_example(): void
+    use RefreshDatabase;
+    public function testBadgeUnlockedEventHasCorrectProperties()
     {
-        $response = $this->get('/');
+        $user = User::factory()->create();
 
-        $response->assertStatus(200);
+        $event = new BadgeUnlocked('Test Badge', $user);
+
+        $this->assertInstanceOf(BadgeUnlocked::class, $event);
+        $this->assertSame('Test Badge', $event->badgeName);
+        $this->assertSame($user, $event->user);
     }
 }
