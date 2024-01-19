@@ -79,5 +79,12 @@ class User extends Authenticatable
                 'type'    => $type,
         ]);
     }
+    public function unlockBadge($badgeName, $user): void
+    {
+        Badge::create([
+                'name'    => $badgeName,
+                'user_id' => $user->id,
+        ]);
+    }
 }
 
