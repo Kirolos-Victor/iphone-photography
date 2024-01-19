@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
+use App\Listeners\LessonWatchedListener;
 use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class LessonTest extends TestCase
@@ -32,5 +35,29 @@ class LessonTest extends TestCase
         $this->assertInstanceOf(LessonWatched::class, $event);
         $this->assertSame($lesson, $event->lesson);
         $this->assertSame($user, $event->user);
+    }
+
+    public function testAchievementUnlockedEventIsFiredWhenLessonIsWatched()
+    {
+        Event::fake();
+        $user = User::factory()->create();
+        $lesson = Lesson::factory()->create();
+        $event = new LessonWatched($lesson, $user);
+        $listener = new LessonWatchedListener();
+
+        $listener->handle($event);
+
+        $lessonsWatched = $user->watched->count();
+        $achievement = Lesson::LESSONS_ACHIEVEMENTS[$lessonsWatched] ?? null;
+
+        if ($achievement) {
+            Event::assertDispatched(AchievementUnlocked::class, function ($event) use ($user, $achievement) {
+                return $event->achievementName === $achievement
+                        && $event->user === $user
+                        && $event->type === 'lesson';
+            });
+        } else {
+            Event::assertNotDispatched(AchievementUnlocked::class);
+        }
     }
 }
