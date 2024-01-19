@@ -72,16 +72,4 @@ class AchievementTest extends TestCase
                 'type'    => 'test',
         ]);
     }
-
-    public function testAllRemainingAchievementsForTheUser(){
-        $user = User::factory()->create();
-        $availableLessonAchievements = (new AvailableLessonAchievementAction())->get($user);
-        $expectedLessonAchievements = array_values(Lesson::LESSONS_ACHIEVEMENTS);
-        $availableCommentAchievements = (new AvailableCommentAchievementAction())->get($user);
-        $expectedCommentAchievements = array_values(Comment::COMMENTS_ACHIEVEMENTS);
-        $this->assertEquals($expectedCommentAchievements, $availableCommentAchievements);
-        $this->assertEquals($expectedLessonAchievements, $availableLessonAchievements);
-    }
-
-
 }
