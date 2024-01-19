@@ -2,12 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
+    const COMMENTS_ACHIEVEMENTS = [
+            1  => 'First Comment Written',
+            3  => '3 Comments Written',
+            5  => '5 Comments Written',
+            10 => '10 Comments Written',
+            20 => '20 Comments Written',
+    ];
+
     use HasFactory;
 
     /**
@@ -16,14 +24,14 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'body',
-        'user_id'
+            'body',
+            'user_id',
     ];
 
     /**
      * Get the user that wrote the comment.
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
