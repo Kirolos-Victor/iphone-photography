@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
+    use HasFactory;
     const COMMENTS_ACHIEVEMENTS = [
             1  => 'First Comment Written',
             3  => '3 Comments Written',
@@ -15,8 +16,6 @@ class Comment extends Model
             10 => '10 Comments Written',
             20 => '20 Comments Written',
     ];
-
-    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
