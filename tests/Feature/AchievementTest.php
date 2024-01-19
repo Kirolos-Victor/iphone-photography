@@ -22,4 +22,18 @@ class AchievementTest extends TestCase
         $this->assertSame($user, $event->user);
         $this->assertSame('test', $event->type);
     }
+    public function testUnlockAchievementCreatesAchievement()
+    {
+        $user = User::factory()->create();
+        $achievementName = 'Test Achievement';
+        $type = 'test';
+
+        $user->unlockAchievement($achievementName, $user, $type);
+
+        $this->assertDatabaseHas('achievements', [
+                'name'    => $achievementName,
+                'user_id' => $user->id,
+                'type'    => $type,
+        ]);
+    }
 }
