@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Events\BadgeUnlocked;
 use App\Models\Badge;
 use App\Models\User;
+use App\Services\NextLockedBadge;
+use App\Services\RemainingToUnlockNextBadge;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -32,4 +34,12 @@ class BadgeTest extends TestCase
         $this->assertSame('Test Badge', $event->badgeName);
         $this->assertSame($user, $event->user);
     }
+
+    public function testGettingNextLockedBadge()
+    {
+        $user = User::factory()->create();
+        $nextLockedBadge = (new NextLockedBadge())->get($user);
+        $this->assertEquals('Intermediate', $nextLockedBadge);
+    }
+    
 }
