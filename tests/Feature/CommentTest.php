@@ -36,6 +36,29 @@ class CommentTest extends TestCase
         $this->assertSame($comment, $event->comment);
     }
 
-   
+    public function testAchievementUnlockedEventIsFiredWhenCommentWritten()
+    {
+        Event::fake();
+
+        $comment = Comment::factory()->create();
+        $user = $comment->user;
+        $listener = new CommentWrittenListener();
+
+
+        $listener->handle(new CommentWritten($comment));
+
+        $commentsCount = $user->comments->count();
+        $achievement = Comment::COMMENTS_ACHIEVEMENTS[$commentsCount] ?? null;
+
+        if ($achievement) {
+            Event::assertDispatched(AchievementUnlocked::class, function ($event) use ($user, $achievement) {
+                return $event->achievementName === $achievement
+                        && $event->user === $user
+                        && $event->type === 'comment';
+            });
+        } else {
+            Event::assertNotDispatched(AchievementUnlocked::class);
+        }
+    }
 
 }
