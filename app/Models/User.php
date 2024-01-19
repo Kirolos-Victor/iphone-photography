@@ -20,9 +20,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+            'name',
+            'email',
+            'password',
     ];
 
     /**
@@ -31,8 +31,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+            'password',
+            'remember_token',
     ];
 
     /**
@@ -41,8 +41,8 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+            'email_verified_at' => 'datetime',
+            'password'          => 'hashed',
     ];
 
     /**
@@ -67,6 +67,15 @@ class User extends Authenticatable
     public function watched(): BelongsToMany
     {
         return $this->belongsToMany(Lesson::class)->wherePivot('watched', true);
+    }
+
+    public function unlockAchievement($achievementName, $user, $type): void
+    {
+        Achievement::create([
+                'name'    => $achievementName,
+                'user_id' => $user->id,
+                'type'    => $type,
+        ]);
     }
 }
 
