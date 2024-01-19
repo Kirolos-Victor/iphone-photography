@@ -41,5 +41,10 @@ class BadgeTest extends TestCase
         $nextLockedBadge = (new NextLockedBadge())->get($user);
         $this->assertEquals('Intermediate', $nextLockedBadge);
     }
-    
+    public function testRemainingToUnlockNextBadge()
+    {
+        $user = User::factory()->create();
+        $remaining = (new RemainingToUnlockNextBadge())->get($user);
+        $this->assertEquals(4, $remaining);
+    }
 }
