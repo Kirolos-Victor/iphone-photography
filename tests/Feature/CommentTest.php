@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Actions\AvailableCommentAchievementAction;
 use App\Events\AchievementUnlocked;
 use App\Events\CommentWritten;
 use App\Listeners\CommentWrittenListener;
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -44,7 +46,6 @@ class CommentTest extends TestCase
         $user = $comment->user;
         $listener = new CommentWrittenListener();
 
-
         $listener->handle(new CommentWritten($comment));
 
         $commentsCount = $user->comments->count();
@@ -59,6 +60,14 @@ class CommentTest extends TestCase
         } else {
             Event::assertNotDispatched(AchievementUnlocked::class);
         }
+    }
+
+    public function testAvailableCommentsAchievementsForNewUser()
+    {
+        $user = User::factory()->create();
+        $availableCommentAchievements = (new AvailableCommentAchievementAction())->get($user);
+        $expectedAchievements = array_values(Comment::COMMENTS_ACHIEVEMENTS);
+        $this->assertEquals($expectedAchievements, $availableCommentAchievements);
     }
 
 }

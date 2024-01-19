@@ -2,9 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Actions\AvailableCommentAchievementAction;
+use App\Actions\AvailableLessonAchievementAction;
 use App\Events\AchievementUnlocked;
 use App\Listeners\AchievementUnlockedListener;
 use App\Models\Achievement;
+use App\Models\Comment;
+use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -68,4 +72,16 @@ class AchievementTest extends TestCase
                 'type'    => 'test',
         ]);
     }
+
+    public function testAllRemainingAchievementsForTheUser(){
+        $user = User::factory()->create();
+        $availableLessonAchievements = (new AvailableLessonAchievementAction())->get($user);
+        $expectedLessonAchievements = array_values(Lesson::LESSONS_ACHIEVEMENTS);
+        $availableCommentAchievements = (new AvailableCommentAchievementAction())->get($user);
+        $expectedCommentAchievements = array_values(Comment::COMMENTS_ACHIEVEMENTS);
+        $this->assertEquals($expectedCommentAchievements, $availableCommentAchievements);
+        $this->assertEquals($expectedLessonAchievements, $availableLessonAchievements);
+    }
+
+
 }

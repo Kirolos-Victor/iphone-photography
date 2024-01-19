@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Actions\AvailableLessonAchievementAction;
 use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
 use App\Listeners\LessonWatchedListener;
@@ -59,5 +60,12 @@ class LessonTest extends TestCase
         } else {
             Event::assertNotDispatched(AchievementUnlocked::class);
         }
+    }
+    public function testAvailableLessonsAchievementsForNewUser()
+    {
+        $user = User::factory()->create();
+        $availableLessonAchievements = (new AvailableLessonAchievementAction())->get($user);
+        $expectedAchievements = array_values(Lesson::LESSONS_ACHIEVEMENTS);
+        $this->assertEquals($expectedAchievements, $availableLessonAchievements);
     }
 }
