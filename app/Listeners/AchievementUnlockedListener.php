@@ -12,6 +12,6 @@ class AchievementUnlockedListener
         $achievementName = $event->achievementName;
 
         // Update user's achievements logic
-        $user->unlockAchievement($achievementName, $user, $event->type);
+        $user->unlockAchievement($achievementName, $event->type);
     }
 }

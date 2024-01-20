@@ -47,7 +47,7 @@ class AchievementTest extends TestCase
         $achievementName = 'Test Achievement';
         $type = 'test';
 
-        $user->unlockAchievement($achievementName, $user, $type);
+        $user->unlockAchievement($achievementName, $type);
 
         $this->assertDatabaseHas('achievements', [
                 'name'    => $achievementName,
